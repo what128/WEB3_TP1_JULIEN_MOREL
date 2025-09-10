@@ -1,0 +1,18 @@
+{% extends "base.jinja" %}
+
+{% block contenu %}
+<h2>Services proposés</h2>
+<ul>
+    {% for unservice in services %}
+        {% if unservice.actif %}
+            <li>{{unservice.titre}}</li>
+            <li>{{unservice.id_categorie}}</li>
+            <li>{{unservice.id_localisation}}</li>
+            <a href="http://127.0.0.1:5000/service?id={{unservice.id_service}}">Accéder au service</a>
+            <li>{{unservice.id_categorie}}</li>
+        {% endif %}
+    {% endfor %}
+</ul>
+
+
+{% endblock %}

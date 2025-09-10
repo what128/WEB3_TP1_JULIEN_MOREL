@@ -1,0 +1,13 @@
+{% extends "base.jinja" %}
+
+{% block contenu %}
+<h2>Liste des services</h2>
+<ul>
+
+    {% for detail in details_service %}
+    <li>{{detail}}</li>
+    {% endfor %}
+    
+</ul>
+
+{% endblock %}

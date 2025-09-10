@@ -11,10 +11,10 @@ import mysql.connector
 def creer_connexion():
     """Pour créer une connexion à la BD"""
     conn = mysql.connector.connect(
-        user="root",
-        password="",
+        user="garneau",
+        password="qwerty_123",
         host="127.0.0.1",
-        database="demo_jeux",
+        database="services_particuliers",
         raise_on_warnings=True
     )
 
