@@ -1,13 +1,27 @@
 {% extends "base.jinja" %}
 
 {% block contenu %}
-<h2>Liste des services</h2>
+{% if erreur_service == true %}
+<p>Une erreur est survenue lors de l'affichange de ce service.</p>
+{% else %}
+<h2>Détails du service</h2>
 <ul>
 
-    {% for detail in details_service %}
-    <li>{{detail}}</li>
-    {% endfor %}
+    <li>Titre: {{details_service.titre}}</li>
+    <li>Localisation: {{details_service.localisation}}</li>
+    <li>Description: {{details_service.description}}</li>
+    <li>Coût: {{details_service.cout}}$</li>
+    <li>Date de création: {{details_service.date_creation}}</li>
+    <li>Statut:
+     {% if details_service.actif == 1 %}
+     Actif
+     {% else %}
+     Inactif
+     {% endif %}
+     </li>
+    <li>Catégorie: {{details_service.nom_categorie}}</li>
     
 </ul>
+{% endif%}
 
 {% endblock %}

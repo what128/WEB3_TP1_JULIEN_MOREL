@@ -1,0 +1,41 @@
+{% extends "base.jinja" %}
+
+{% block contenu %}
+ <form action="/ajouter" method="post" novalidate>
+            <div>
+                <label for="nom">Titre:</label>
+                <input type="text" name="titre" id="titre" />
+            </div>
+            <div>
+                <label for="localisation">Localisation:</label>
+                <input type="text" name="localisation" id="localisation" />
+            </div>
+            <div>
+                <label for="description">Description:</label>
+                <input type="text" name="description" id="description" />
+            </div>
+            <div>
+                <label for="cout">Coût (en $):</label>
+                <input type="number" name="cout" id="cout" />
+            </div>
+            <div>
+                <label for="statut">Statut:</label>
+                <select name="statut" id="statut">
+                    <option value="1" selected>Actif</option>
+                    <option value="2">Inactif</option>
+                </select>
+            </div>
+            <div>
+                <label for="categorie">Catégorie:</label>
+                <select name="categorie" id="categorie">
+                    {% for categorie in categories %}
+                    <option value="{{categorie.id_categorie}}">{{categorie.nom_categorie}}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div>
+                <button type="submit">Ajouter</button>
+            </div>
+        </form>
+
+{% endblock %}
