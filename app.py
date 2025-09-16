@@ -18,7 +18,7 @@ def ajouter_service_dans_bd():
         titre = request.form.get("titre", default="")
         localisation = request.form.get("localisation", default="")
         description = request.form.get("description", default="")
-        cout = request.form.get("cout", type=int)
+        cout = request.form.get("cout", type=float)
         statut = request.form.get("statut", type=int)
         categorie = request.form.get("categorie", type=int)
         with bd.creer_connexion() as conn:
@@ -38,7 +38,7 @@ def ajouter_service_dans_bd():
                         "cout": cout
                     }
                 )
-                return redirect('/', 302)
+                return redirect('/', code=302)
 
 
 
@@ -46,12 +46,59 @@ def ajouter_service_dans_bd():
 def ajout_service():
     """Interface pour ajouter un service"""
     categories = []
-    with bd.creer_connexion() as conn:
-        with conn.get_curseur() as curseur:
-            curseur.execute('select * from categories;')
-            categories = curseur.fetchall()
+    try:
+        with bd.creer_connexion() as conn:
+            with conn.get_curseur() as curseur:
+                curseur.execute('select * from categories;')
+                categories = curseur.fetchall()
+    except Exception as e:
+         my = 1
+
            
-    return render_template('ajout_service.jinja', page="Ajout d'un service", categories=categories) 
+    return render_template('ajout_service.jinja', page="Ajout d'un service", categories=categories)
+
+@app.route('/modifier', methods=['GET', 'POST'])
+def modifier_service():
+    """Interface pour modifier un service"""
+    identifiant = request.args.get('id', type=int)
+    with bd.creer_connexion() as conn:
+            with conn.get_curseur() as curseur:
+                curseur.execute('select * from services where id_service = %(id)s;',
+                                {
+                                    'id': identifiant
+                                })
+                service = curseur.fetchone()
+    return render_template('modification-service.jinja', service=service)
+
+@app.route('/modification', methods=['GET', 'POST'])
+def modification_service():
+    """Modification d'un service"""
+    identifiant = request.form.get('id', type=int)
+    titre = request.form.get('titre', default='')
+    description = request.form.get('description', default='')
+    localisation = request.form.get('localisation', default='')
+    statut = request.form.get('statut', type=int)
+    cout = request.form.get('cout', type=float)
+    photo = request.form.get('photo', default='')
+    with bd.creer_connexion() as conn:
+            with conn.get_curseur() as curseur:
+                curseur.execute('update services set '
+                'titre = %(titre)s, description = %(description)s, localisation = %(localisation)s,'
+                'actif = %(statut)s, cout = %(cout)s, photo = %(photo)s '
+                'where id_service = %(id)s;',
+                {
+                    'id': identifiant,
+                    'titre': titre,
+                    'description': description,
+                    'localisation': localisation,
+                    'statut': statut,
+                    'cout': cout,
+                    'photo': photo
+                })
+    return redirect(f'/service?id={identifiant}', code=302)
+
+    
+
 
 @app.route('/service', methods=["GET", "POST"])
 def details_service():
