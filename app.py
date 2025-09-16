@@ -2,12 +2,15 @@
 Exercice de page de détails
 """
 
-from flask import Flask, render_template, request, redirect
-from datetime import datetime
+from flask import Flask, render_template, request, redirect, abort
+from flask.logging import create_logger
+from mysql.connector import Error
+import mysql
 import bd
 
 
 app = Flask(__name__)
+logger = create_logger(app)
 
 
 
@@ -21,24 +24,32 @@ def ajouter_service_dans_bd():
         cout = request.form.get("cout", type=float)
         statut = request.form.get("statut", type=int)
         categorie = request.form.get("categorie", type=int)
-        with bd.creer_connexion() as conn:
-            with conn.get_curseur() as curseur:
-                curseur.execute(
-                    "INSERT INTO `services`(`id_categorie`, `titre`, `description`," \
-                    " `localisation`, `actif`, `cout`)" \
-                    " VALUES (%(id_categorie)s,%(titre)s,%(description)s," \
-                    "%(localisation)s,%(actif)s" \
-                    ",%(cout)s);",
-                    {
-                        "id_categorie": categorie,
-                        "titre": titre,
-                        "description": description,
-                        "localisation": localisation,
-                        "actif": statut,
-                        "cout": cout
-                    }
-                )
-                return redirect('/', code=302)
+        photo = request.form.get("photo", default="")
+
+        try:
+            with bd.creer_connexion() as conn:
+                with conn.get_curseur() as curseur:
+                    curseur.execute(
+                        "INSERT INTO `services`(`id_categorie`, `titre`, `description`," \
+                        " `localisation`, `actif`, `cout`, `photo`)" \
+                        " VALUES (%(id_categorie)s,%(titre)s,%(description)s," \
+                        "%(localisation)s,%(actif)s" \
+                        ",%(cout)s,%(photo)s);",
+                        {
+                            "id_categorie": categorie,
+                            "titre": titre,
+                            "description": description,
+                            "localisation": localisation,
+                            "actif": statut,
+                            "cout": cout,
+                            "photo": photo
+                        }
+                    )
+                    id_service_courant = curseur.lastrowid
+                    return redirect(f'/service?id={id_service_courant}', code=302)
+        except Exception as e:
+                logger.exception("Une erreur est survenue lors de l'ajout du service: %s", e)
+                abort(500)
 
 
 
@@ -52,7 +63,9 @@ def ajout_service():
                 curseur.execute('select * from categories;')
                 categories = curseur.fetchall()
     except Exception as e:
-         my = 1
+        logger.exception("Une erreur est survenue lors de la tentative pour retouver les" \
+        "noms de catégories de services dans la base de données: %s", e)
+        abort(500)
 
            
     return render_template('ajout_service.jinja', page="Ajout d'un service", categories=categories)
@@ -98,8 +111,6 @@ def modification_service():
     return redirect(f'/service?id={identifiant}', code=302)
 
     
-
-
 @app.route('/service', methods=["GET", "POST"])
 def details_service():
     """Affiche les services"""
@@ -140,21 +151,39 @@ def index():
     services_actifs = False
 
     # TODO : faire try except et mettre dans logger
-
-    with bd.creer_connexion() as conn:
-        with conn.get_curseur() as curseur:
-            curseur.execute('SELECT * from services WHERE actif=1 ORDER BY date_creation desc LIMIT 5;')
-            services = curseur.fetchall()
-            for service in services:
-                curseur.execute(
-                "SELECT nom_categorie FROM categories WHERE id_categorie=%(id_categorie)s",
-                {
-                    "id_categorie": service["id_categorie"]
-                })
-                service["nom_categorie"] = curseur.fetchone()["nom_categorie"]
+    try:
+        with bd.creer_connexion() as conn:
+            with conn.get_curseur() as curseur:
+                curseur.execute('SELECT * from services WHERE actif=1 ORDER BY date_creation desc LIMIT 5;')
+                services = curseur.fetchall()
+                for service in services:
+                    curseur.execute(
+                    "SELECT nom_categorie FROM categories WHERE id_categorie=%(id_categorie)s",
+                    {
+                        "id_categorie": service["id_categorie"]
+                    })
+                    service["nom_categorie"] = curseur.fetchone()["nom_categorie"]
+    except Exception as e:
+        logger.exception(e)
+        abort(500)
 
 
     return render_template(
         'accueil.jinja', page="Accueil", services=services)
+
+
+@app.errorhandler(500)
+def erreur_serveur_interne(e):
+    """Pour les erreurs du côté serveur"""
+    logger.exception(e)
+
+    message = "Une erreur du côté serveur est survenue. Veuillez retourner à la page d'accueil."
+    
+    if e.original_exception and isinstance(e.original_exception, mysql.connector.errors.Error):
+        message = "Une erreur est survenue en lien avec la base de données."
+
+    return render_template("erreur.jinja", page="Erreur", message=message)
+    
+
      
 app.run()

@@ -5,7 +5,7 @@
 <ul>
     {% for unservice in services %}
         {% if unservice.actif %}
-            <li><img src="../images/rick.ico" alt="Image de Rick Astley"></li>
+            <li><img src="{{ url_for('static', filename='images/rick.png') }}" alt="Image de Rick Astley"></li>
             <li>Titre : {{unservice.titre}}</li>
             <li>Catégorie: {{unservice.nom_categorie}}</li>
             <li>Localisation: {{unservice.localisation}}</li>

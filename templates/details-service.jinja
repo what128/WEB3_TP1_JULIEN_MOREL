@@ -6,7 +6,7 @@
 {% else %}
 <h2>Détails du service</h2>
 <ul>
-
+    <li><img src="{{ url_for('static', filename='images/rick.png') }}" alt="Image de Rick Astley"></li>
     <li>Titre: {{details_service.titre}}</li>
     <li>Localisation: {{details_service.localisation}}</li>
     <li>Description: {{details_service.description}}</li>
