@@ -4,19 +4,23 @@
  <form action="/ajouter" method="post" novalidate>
             <div>
                 <label for="nom">Titre:</label>
-                <input type="text" name="titre" id="titre" />
+                <input type="text" name="titre" id="titre" value="{{titre}}" class="{{classe_titre}}"/>
+                <div class="invalid-feedback">Le titre doit contenir entre 1 et 50 caractères.</div>
             </div>
             <div>
                 <label for="localisation">Localisation:</label>
-                <input type="text" name="localisation" id="localisation" />
+                <input type="text" name="localisation" id="localisation" value="{{localisation}}" class="{{classe_localisation}}"/>
+                <div class="invalid-feedback">La localisation doit contenir entre 1 et 50 caractères.</div>
             </div>
             <div>
                 <label for="description">Description:</label>
-                <input type="text" name="description" id="description" />
+                <input type="text" name="description" id="description" value="{{description}}" class="{{classe_description}}" />
+                <div class="invalid-feedback">La description doit contenir entre 5 et 2000 caractères.</div>
             </div>
             <div>
                 <label for="cout">Coût (en $):</label>
-                <input type="number" name="cout" id="cout" />
+                <input type="number" name="cout" id="cout" value="{{cout}}" class="{{classe_cout}}" />
+                <div class="invalid-feedback">Le coût doit être une valeur monétaire.</div>
             </div>
             <div>
                 <label for="statut">Statut:</label>
@@ -27,11 +31,14 @@
             </div>
             <div>
                 <label for="categorie">Catégorie:</label>
-                <select name="categorie" id="categorie">
-                    {% for categorie in categories %}
-                    <option value="{{categorie.id_categorie}}">{{categorie.nom_categorie}}</option>
+                <select name="categorie" id="categorie" class="{{ classe_categorie }}">
+                    {% for categorie_info in categories %}
+                        <option value="{{ categorie_info.id_categorie }}"
+                        {% if categorie_info.id_categorie == categorie %}selected{% endif %}>
+                        {{ categorie_info.nom_categorie }}</option>
                     {% endfor %}
                 </select>
+<div class="invalid-feedback">Vous devez sélectionner une catégorie.</div>
             </div>
             <div>
             <label for="photo">Photo:</label>

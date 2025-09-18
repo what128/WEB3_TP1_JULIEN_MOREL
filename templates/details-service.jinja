@@ -5,24 +5,23 @@
 <p>Une erreur est survenue lors de l'affichange de ce service.</p>
 {% else %}
 <h2>Détails du service</h2>
-<ul>
-    <li><img src="{{ url_for('static', filename='images/rick.png') }}" alt="Image de Rick Astley"></li>
-    <li>Titre: {{details_service.titre}}</li>
-    <li>Localisation: {{details_service.localisation}}</li>
-    <li>Description: {{details_service.description}}</li>
-    <li>Coût: {{details_service.cout}}$</li>
-    <li>Date de création: {{details_service.date_creation}}</li>
-    <li>Statut:
+<div class="col-md-4 m-2 p-2 justify-content-center align-items-center text-center affichage-service">
+    <img src="{{ url_for('static', filename='images/rick.png') }}" alt="Image de Rick Astley">
+    <p>Titre: {{details_service.titre}}</p>
+    <p>Localisation: {{details_service.localisation}}</p>
+    <p>Description: {{details_service.description}}</p>
+    <p>Coût: {{details_service.cout}}$</p>
+    <p>Date de création: {{details_service.date_creation}}</p>
+    <p>Statut:
      {% if details_service.actif == 1 %}
      Actif
      {% else %}
      Inactif
      {% endif %}
-     </li>
-    <li>Catégorie: {{details_service.nom_categorie}}</li>
-    <li><a href="http://127.0.0.1:5000/modifier?id={{details_service.id_service}}">Modifier le service</a></li>
-    
-</ul>
+     </p>
+    <p>Catégorie: {{details_service.nom_categorie}}</p>
+    <a href="http://127.0.0.1:5000/modifier?id={{details_service.id_service}}" class="btn btn-primary">Modifier le service</a>
+</div>
 {% endif%}
 
 {% endblock %}

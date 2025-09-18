@@ -2,17 +2,19 @@
 
 {% block contenu %}
 <h2>Services proposés</h2>
-<ul>
+<section class="row">
     {% for unservice in services %}
+    <div class="col-md-4 m-2 p-2 justify-content-center align-items-center text-center affichage-service">
         {% if unservice.actif %}
-            <li><img src="{{ url_for('static', filename='images/rick.png') }}" alt="Image de Rick Astley"></li>
-            <li>Titre : {{unservice.titre}}</li>
-            <li>Catégorie: {{unservice.nom_categorie}}</li>
-            <li>Localisation: {{unservice.localisation}}</li>
-            <a href="http://127.0.0.1:5000/service?id={{unservice.id_service}}">Accéder au service</a>
+            <img src="{{ url_for('static', filename='images/rick.png') }}" alt="Image de Rick Astley">
+            <p>Titre : {{unservice.titre}}</p>
+            <p>Catégorie: {{unservice.nom_categorie}}</p>
+            <p>Localisation: {{unservice.localisation}}</p>
+            <a href="http://127.0.0.1:5000/service?id={{unservice.id_service}}" class="btn btn-primary">Accéder au service</a>
         {% endif %}
+    </div>
     {% endfor %}
-</ul>
+</section>
 <button type="button"><a href="http://127.0.0.1:5000/ajout">Ajouter un service</a></button>
 
 

@@ -2,29 +2,75 @@
 Exercice de page de détails
 """
 
-from flask import Flask, render_template, request, redirect, abort
+from flask import Flask, render_template, request, redirect, abort, make_response
 from flask.logging import create_logger
 from mysql.connector import Error
 import mysql
 import bd
+import re
 
 
 app = Flask(__name__)
 logger = create_logger(app)
+
+def retrouver_categories():
+    categories = []
+    try:
+        with bd.creer_connexion() as conn:
+            with conn.get_curseur() as curseur:
+                curseur.execute('select * from categories;')
+                return curseur.fetchall()
+    except Exception as e:
+        logger.exception("Une erreur est survenue lors de la tentative pour retouver les" \
+        "noms de catégories de services dans la base de données: %s", e)
+        abort(500)
 
 
 
 @app.route('/ajouter', methods=["GET", "POST"])
 def ajouter_service_dans_bd():
     """Ajout du service dans la base de données"""
+    classe_titre = ""
+    classe_description = ""
+    classe_localisation = ""
+    classe_cout = ""
+    classe_categorie = ""
+
+    erreur = False
+
     if request.method == "POST":
-        titre = request.form.get("titre", default="")
-        localisation = request.form.get("localisation", default="")
-        description = request.form.get("description", default="")
-        cout = request.form.get("cout", type=float)
+      
+        regex_titre_localisation = re.compile("^[a-zA-Z]{1,50}$")
+        regex_description = re.compile("^.{5,2000}$")
+        
+        titre = request.form.get("titre", default="").strip()
+        if not regex_titre_localisation.match(titre):
+            erreur = True
+            classe_titre="is-invalid"
+
+        localisation = request.form.get("localisation", default="").strip()
+        if not regex_titre_localisation.match(localisation):
+            erreur = True
+            classe_localisation = "is-invalid"
+
+        description = request.form.get("description", default="").strip()
+        if not regex_description.match(description):
+            erreur = True
+            classe_description =  "is-invalid"
+
+        cout = request.form.get("cout", type=float, default=0)
+
         statut = request.form.get("statut", type=int)
         categorie = request.form.get("categorie", type=int)
-        photo = request.form.get("photo", default="")
+        photo = request.form.get("photo", default="").strip()
+
+        if erreur:
+            return render_template("ajout_service.jinja", classe_titre=classe_titre, titre=titre,
+                classe_localisation=classe_localisation, localisation=localisation, classe_description=classe_description,
+                description=description, classe_cout=classe_cout, cout=cout, classe_categorie=classe_categorie, categorie=categorie,
+                categories=retrouver_categories())
+        
+
 
         try:
             with bd.creer_connexion() as conn:
@@ -56,19 +102,8 @@ def ajouter_service_dans_bd():
 @app.route('/ajout', methods=["GET", "POST"])
 def ajout_service():
     """Interface pour ajouter un service"""
-    categories = []
-    try:
-        with bd.creer_connexion() as conn:
-            with conn.get_curseur() as curseur:
-                curseur.execute('select * from categories;')
-                categories = curseur.fetchall()
-    except Exception as e:
-        logger.exception("Une erreur est survenue lors de la tentative pour retouver les" \
-        "noms de catégories de services dans la base de données: %s", e)
-        abort(500)
-
-           
-    return render_template('ajout_service.jinja', page="Ajout d'un service", categories=categories)
+          
+    return render_template('ajout_service.jinja', page="Ajout d'un service", categories=retrouver_categories())
 
 @app.route('/modifier', methods=['GET', 'POST'])
 def modifier_service():
@@ -91,7 +126,7 @@ def modification_service():
     description = request.form.get('description', default='')
     localisation = request.form.get('localisation', default='')
     statut = request.form.get('statut', type=int)
-    cout = request.form.get('cout', type=float)
+    cout = request.form.get('cout', type=float, default=0)
     photo = request.form.get('photo', default='')
     with bd.creer_connexion() as conn:
             with conn.get_curseur() as curseur:
@@ -183,7 +218,15 @@ def erreur_serveur_interne(e):
         message = "Une erreur est survenue en lien avec la base de données."
 
     return render_template("erreur.jinja", page="Erreur", message=message)
-    
+
+@app.errorhandler(404)
+def page_non_trouvee(e):
+    """Pour les routes invalides"""
+    logger.exception(e)
+
+    message = "Cette page n'existe pas"
+
+    return render_template("erreur.jinja", page="Erreur", message=message)
 
      
 app.run()
