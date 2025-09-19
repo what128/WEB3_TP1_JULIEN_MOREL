@@ -1,0 +1,22 @@
+{% extends "base.jinja" %}
+
+{% block contenu %}
+<h2>Cookies</h2>
+<form action="/modification-cookies" method="post">
+    <div>
+        <select name="langue" id="langue">
+                    <option value="fr_CA"
+                    {% if langue == 'fr_CA' %}selected{% endif %}>fr_CA</option>
+                    <option value="en_US"
+                    {% if langue == 'en_US' %}selected{% endif %}>en_US</option>
+                    <option value="en_CA"
+                    {% if langue == 'en_CA' %}selected{% endif %}>en_CA</option>
+        </select>
+    </div>
+    <div>
+        <button type="submit">Modifier les cookies</button>
+    </div>
+</form>
+
+
+{% endblock %}

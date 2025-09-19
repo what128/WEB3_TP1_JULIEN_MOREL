@@ -13,7 +13,7 @@
 
 <body>
     <header class="row">
-      <nav class="navbar navbar-expand-lg navbar-light bg-light col-6">
+      <nav class="navbar navbar-expand-lg navbar-light bg-light col-9">
         <a class="navbar-brand" href="#">Navigation</a>
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
           <span class="navbar-toggler-icon"></span>
@@ -27,16 +27,15 @@
           <a class="nav-link" href="http://127.0.0.1:5000/ajout">Ajouter un service</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" href="#">Pricing</a>
+          <a class="nav-link" href="http://127.0.0.1:5000/services">Tous les services</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="http://127.0.0.1:5000/cookies">Cookies</a>
         </li>
         </ul>
         </div>
         </nav>
-        <select name="region" id="region" class="col-3">
-                    <option value="fr_CA" selected>fr_CA</option>
-                    <option value="en_US">en_US</option>
-                    <option value="en_CA">en_CA</option>
-        </select>
+        <p class="col-3">Langue: {{langue}}</p>
         <button type="submit">Envoyer</button>
     </header>
     <main>

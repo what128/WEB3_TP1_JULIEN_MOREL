@@ -1,0 +1,41 @@
+{% extends "base.jinja" %}
+
+{% block contenu %}
+    <form method="post" action="/modification">
+    <label for="id"></label>
+    <input type="hidden" name="id" value="{{id_service}}">
+    <div>
+      <label for="titre">Titre:</label>
+      <input type="text" name="titre" id="titre" value="{{titre}}" class="{{classe_titre}}"/>
+      <div class="invalid-feedback">Le titre doit contenir entre 1 et 50 caractères, et il ne peut pas y avoir de balises html.</div>
+    </div>
+     <div>
+        <label for="localisation">Localisation:</label>
+        <input type="text" name="localisation" id="localisation" value="{{localisation}}" class="{{classe_localisation}}"/>
+        <div class="invalid-feedback">La localisation doit contenir entre 1 et 50 caractères, et il ne peut pas y avoir de balises html.</div>
+    </div>
+     <div>
+        <label for="description">Description:</label>
+        <input type="text" name="description" id="description" value="{{description}}" class="{{classe_description}}" />
+        <div class="invalid-feedback">La description doit contenir entre 5 et 2000 caractères, et il ne doit pas y avoir de balises html.</div>
+    </div>
+     <div>
+      <label for="cout">Coût (en $):</label>
+      <input type="number" name="cout" id="cout" value="{{cout}}" class="{{classe_cout}}" />
+      <div class="invalid-feedback">Le coût doit être une valeur monétaire.</div>
+    </div>
+     <div>
+       <label for="statut">Statut:</label>
+       <input type="hidden" name="statut" value="0">
+       <input type="checkbox" id="statut" name="statut" value="1" {%if statut == 1 %} checked  {% endif %}>
+       <label for="statut">Actif</label>
+    </div>
+     <div>
+        <label for="photo">Photo:</label>
+        <input type="text" name="photo" id="photo" value="{{photo}}" class="{{classe_photo}}">
+        <div class="invalid-feedback">Ce champ ne peut contenir des balises html.</div>
+    </div>
+    <button type="submit">Modifier</button>
+    </form>
+
+{% endblock %}

@@ -1,10 +1,11 @@
 {% extends "base.jinja" %}
 
 {% block contenu %}
-<h2>Services actifs proposés</h2>
+
+<h2>Services proposés</h2>
 <section class="row">
-    {% if services_actifs == false %}
-    <p>Aucun service actif n'est disponible</p>
+    {% if services_existants == false %}
+    <p>Aucun service existant n'est disponible</p>
     {% else %}
     {% for unservice in services %}
     <div class="col-md-4 m-2 p-2 justify-content-center align-items-center text-center affichage-service">
@@ -19,7 +20,5 @@
     {% endfor %}
     {% endif %}
 </section>
-<a href="http://127.0.0.1:5000/ajout" class="btn btn-primary">Ajouter un service</a>
-
 
 {% endblock %}
