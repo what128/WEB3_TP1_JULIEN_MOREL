@@ -12,8 +12,11 @@
 </head>
 
 <body>
-    <header class="row">
-      <nav class="navbar navbar-expand-lg navbar-light bg-light col-9">
+    <header class="d-flex p-2 align-items-center justify-content-between">
+        <h1 class="fs-3">ServiceExchange</h1>
+        <p class="fs-3">Langue: {{langue}}</p>
+    </header>
+        <nav class="navbar navbar-expand-lg navbar-light bg-light p-2 col-12">
         <a class="navbar-brand" href="#">Navigation</a>
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
           <span class="navbar-toggler-icon"></span>
@@ -35,15 +38,14 @@
         </ul>
         </div>
         </nav>
-        <p class="col-3">Langue: {{langue}}</p>
-        <button type="submit">Envoyer</button>
-    </header>
-    <main>
+
+
+    <main class="p-2 align-items-center justify-content-center text-center">
         {% block contenu %}
         {% endblock %}
     </main>
     </body>
-    <footer class="d-flex justify-content-between">
+    <footer class="d-flex justify-content-between p-2">
         <p>Julien Morel</p>
         <p>Copyright © Julien Morel</p>
     </footer>

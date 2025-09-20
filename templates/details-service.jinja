@@ -5,7 +5,7 @@
 <p>Une erreur est survenue lors de l'affichange de ce service.</p>
 {% else %}
 <h2>Détails du service</h2>
-<div class="col-md-4 m-2 p-2 justify-content-center align-items-center text-center affichage-service">
+<div class="mx-auto w-50 m-2 p-2 justify-content-center align-items-center text-center affichage-service">
     <img src="{{ url_for('static', filename='images/rick.png') }}" alt="Image de Rick Astley">
     <p>Titre: {{details_service.titre}}</p>
     <p>Localisation: {{details_service.localisation}}</p>

@@ -2,8 +2,10 @@
 
 {% block contenu %}
 <h2>Cookies</h2>
-<form action="/modification-cookies" method="post">
-    <div>
+<form action="/modification-cookies" method="post" class="p-2 w-50 mx-auto">
+    <legend>Choisissez votre langue</legend>
+    <fieldset>
+        <label for="langue">Langue:</label>
         <select name="langue" id="langue">
                     <option value="fr_CA"
                     {% if langue == 'fr_CA' %}selected{% endif %}>fr_CA</option>
@@ -12,10 +14,8 @@
                     <option value="en_CA"
                     {% if langue == 'en_CA' %}selected{% endif %}>en_CA</option>
         </select>
-    </div>
-    <div>
-        <button type="submit">Modifier les cookies</button>
-    </div>
+    </fieldset>
+        <button type="submit" class="btn btn-secondary">Modifier les cookies</button>
 </form>
 
 

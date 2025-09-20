@@ -11136,6 +11136,41 @@ textarea.form-control-lg {
   }
 }
 
+body {
+  font-family: "Courier New", Courier, monospace;
+}
+
+img {
+  max-width: 100%;
+}
+
+form {
+  border: 3px solid brown;
+}
+form input,
+form label {
+  padding: 0.5rem;
+  margin: 0.5rem;
+}
+form fieldset div {
+  display: flex;
+  align-items: center;
+  margin-bottom: 0.5rem;
+}
+form label {
+  width: 25%;
+}
+form input,
+form select {
+  width: 75%;
+  flex: 1;
+  padding: 0.5rem;
+  margin: 0.5rem 0;
+}
+form #case-statut label, form #case-statut input {
+  display: inline-block;
+}
+
 header {
   background-color: red;
 }

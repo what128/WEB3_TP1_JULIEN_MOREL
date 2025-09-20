@@ -1,34 +1,42 @@
 {% extends "base.jinja" %}
 
 {% block contenu %}
- <form action="/ajouter" method="post" novalidate>
-            <div>
+ <form action="/ajouter" method="post" novalidate class="p-2 w-50 mx-auto">
+            <legend>Ajouter un service</legend>
+
+            <fieldset>
                 <label for="titre">Titre:</label>
                 <input type="text" name="titre" id="titre" value="{{titre}}" class="{{classe_titre}}"/>
                 <div class="invalid-feedback">Le titre doit contenir entre 1 et 50 caractères, et il ne peut pas y avoir de balises html.</div>
-            </div>
-            <div>
+            </fieldset>
+
+            <fieldset>
                 <label for="localisation">Localisation:</label>
                 <input type="text" name="localisation" id="localisation" value="{{localisation}}" class="{{classe_localisation}}"/>
                 <div class="invalid-feedback">La localisation doit contenir entre 1 et 50 caractères, et il ne peut pas y avoir de balises html.</div>
-            </div>
-            <div>
+            </fieldset>
+
+            <fieldset>
                 <label for="description">Description:</label>
                 <input type="text" name="description" id="description" value="{{description}}" class="{{classe_description}}" />
                 <div class="invalid-feedback">La description doit contenir entre 5 et 2000 caractères, et il ne doit pas y avoir de balises html.</div>
-            </div>
-            <div>
+            </fieldset>
+
+            <fieldset>
                 <label for="cout">Coût (en $):</label>
                 <input type="number" name="cout" id="cout" value="{{cout}}" class="{{classe_cout}}" />
                 <div class="invalid-feedback">Le coût doit être une valeur monétaire.</div>
-            </div>
-            <div>
+            </fieldset>
+
+            <fieldset>
                 <label for="statut">Statut:</label>
-                <input type="hidden" name="statut" value="0">
-                <input type="checkbox" id="statut" name="statut" value="1" checked>
-                <label for="statut">Actif</label>
-            </div>
-            <div>
+                <div class="d-flex justify-content-center" id="case-statut">
+                    <input class="col-3" type="checkbox" id="statut" name="statut" value="1" {% if statut == 1 %} checked {% endif %}>
+                    <label for="statut">Actif</label>
+                </div>
+            </fieldset>
+
+            <fieldset>
                 <label for="categorie">Catégorie:</label>
                 <select name="categorie" id="categorie" class="{{ classe_categorie }}">
                     {% for categorie_info in categories %}
@@ -38,15 +46,15 @@
                     {% endfor %}
                 </select>
                 <div class="invalid-feedback">Vous devez sélectionner une catégorie.</div>
-            </div>
-            <div>
+            </fieldset>
+
+            <fieldset>
                 <label for="photo">Photo:</label>
                 <input type="text" name="photo" id="photo" value="{{photo}}" class="{{classe_photo}}">
                 <div class="invalid-feedback">Ce champ ne peut contenir des balises html.</div>
-            </div>
-            <div>
-                <button type="submit">Ajouter</button>
-            </div>
+            </fieldset>
+
+            <button type="submit" class="btn btn-secondary">Ajouter</button>
         </form>
 
 {% endblock %}

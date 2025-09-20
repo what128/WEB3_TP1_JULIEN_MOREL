@@ -2,7 +2,7 @@
 
 {% block contenu %}
 <h2>Services actifs proposés</h2>
-<section class="row">
+<section class="row align-items-center justify-content-center">
     {% if services_actifs == false %}
     <p>Aucun service actif n'est disponible</p>
     {% else %}
@@ -19,7 +19,7 @@
     {% endfor %}
     {% endif %}
 </section>
-<a href="http://127.0.0.1:5000/ajout" class="btn btn-primary">Ajouter un service</a>
+<a href="http://127.0.0.1:5000/ajout" class="btn btn-secondary m-2 p-2">Ajouter un service</a>
 
 
 {% endblock %}
