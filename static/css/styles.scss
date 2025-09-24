@@ -1,7 +1,19 @@
 @import "bootstrap";
 
+
 body {
     font-family: 'Courier New', Courier, monospace;
+}
+
+header
+{
+    a{
+        text-decoration: none;
+        color: black;
+        :hover{
+            color: cadetblue;
+        }
+    }
 }
 
 img {
@@ -29,15 +41,27 @@ form {
 
     input,
     select {
-        width: 75%;
+        width  : 75%;
         flex   : 1;
         padding: 0.5rem;
         margin : 0.5rem 0;
     }
 
-    #case-statut{
-        label, input{
-            display: inline-block;
+    // modification des règles de bootstrap pour les flexbox pour la case à cocher 'Actif' ici
+    #case-statut {
+        display    : flex;
+        align-items: center;
+        justify-content: center;
+        gap        : 0.25rem; 
+
+        input[type="checkbox"] {
+            width : auto; 
+            margin: 0; 
+        }
+
+        label {
+            width : auto; 
+            margin: 0; 
         }
     }
 }

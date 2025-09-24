@@ -7,20 +7,21 @@
 <h2>Détails du service</h2>
 <div class="mx-auto w-50 m-2 p-2 justify-content-center align-items-center text-center affichage-service">
     <img src="{{ url_for('static', filename='images/rick.png') }}" alt="Image de Rick Astley">
-    <p>Titre: {{details_service.titre}}</p>
-    <p>Localisation: {{details_service.localisation}}</p>
-    <p>Description: {{details_service.description}}</p>
-    <p>Coût: {{details_service.cout}}$</p>
-    <p>Date de création: {{details_service.date_creation}}</p>
-    <p>Statut:
-     {% if details_service.actif == 1 %}
-     Actif
-     {% else %}
-     Inactif
-     {% endif %}
-     </p>
-    <p>Catégorie: {{details_service.nom_categorie}}</p>
-    <a href="http://127.0.0.1:5000/modifier?id={{details_service.id_service}}" class="btn btn-primary">Modifier le service</a>
+    <p><strong>Titre</strong>: {{details_service.titre}}</p>
+    <p><strong>Localisation</strong>: {{details_service.localisation}}</p>
+    <p><strong>Description</strong>: {{details_service.description}}</p>
+    <p><strong>Coût</strong>: {{details_service.cout}}</p>
+    <p><strong>Date de création</strong>: {{details_service.date_creation}}</p>
+    <p><strong>Statut</strong>:
+        {% if details_service.actif == 1 %}
+        Actif
+        {% else %}
+        Inactif
+        {% endif %}
+    </p>
+    <p><strong>Catégorie</strong>: {{details_service.nom_categorie}}</p>
+    <a href="http://127.0.0.1:5000/modifier?id={{details_service.id_service}}" class="btn btn-primary">Modifier le
+        service</a>
 </div>
 {% endif%}
 

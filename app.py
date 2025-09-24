@@ -5,12 +5,25 @@ Exercice de page de détails
 import re
 from flask import Flask, render_template, request, redirect, abort, make_response
 from flask.logging import create_logger
+from babel import numbers, dates
 import mysql
 import bd
 
 
+
 app = Flask(__name__)
 logger = create_logger(app)
+app.config["BABEL_DEFAULT_LOCALE"] = "fr_CA"
+
+devise = {
+        "fr_CA": "CAD",
+        "en_US": "USD",
+        "en_CA": "CAD"
+    }
+
+def get_locale():
+    """Retrouver la langue"""
+    return request.cookies.get("langue", default="fr_CA")
 
 def retrouver_categories():
     """Retrouve les catégories de tous les services."""
@@ -31,16 +44,13 @@ def ajouter_service_dans_bd():
     classe_titre = ""
     classe_description = ""
     classe_localisation = ""
-    classe_cout = ""
     classe_categorie = ""
     classe_photo = ""
 
     erreur = False
 
     if request.method == "POST":
-        langue = request.cookies.get("langue")
-        if not langue:
-            langue = "fr_CA"
+        langue = get_locale()
 
         regex_titre_localisation = re.compile("^[a-zA-ZÀ-ÖØ-öø-ÿ\\s'-]{1,50}$")
         regex_description = re.compile("^.{5,2000}$")
@@ -74,7 +84,7 @@ def ajouter_service_dans_bd():
         if erreur:
             return render_template("ajout_service.jinja", classe_titre=classe_titre, langue=langue, titre=titre,
                 classe_localisation=classe_localisation, localisation=localisation, classe_description=classe_description,
-                description=description, classe_cout=classe_cout, cout=cout, classe_categorie=classe_categorie, categorie=categorie,
+                description=description, cout=cout, classe_categorie=classe_categorie, categorie=categorie,
                 statut=statut, classe_photo=classe_photo, photo=photo, categories=retrouver_categories())
         try:
             with bd.creer_connexion() as conn:
@@ -105,25 +115,20 @@ def ajouter_service_dans_bd():
 @app.route('/ajout', methods=["GET", "POST"])
 def ajout_service():
     """Interface pour ajouter un service"""
-    langue = request.cookies.get("langue")
-    if not langue:
-        langue = "fr_CA"
+    langue = get_locale()
     return render_template('ajout_service.jinja', page="Ajout d'un service", langue=langue, statut=1, categories=retrouver_categories())
 
 @app.route('/cookies', methods=['GET', 'POST'])
 def page_cookies():
     """Page pour changer les cookies"""
-    langue = request.cookies.get("langue")
-    if not langue:
-        langue = "fr_CA"
-
-    return render_template('cookies.jinja', page="Cookies", langue=langue)
+    langue = get_locale()
+    return render_template('cookies.jinja', page="Langue", langue=langue)
 
 @app.route('/modification-cookies', methods=['GET', 'POST'])
 def modification_cookies():
     """Page pour la modification des cookies"""
     if request.method == "POST":
-        langue = request.form.get('langue', default="")
+        langue = request.form.get("langue", default="fr_CA")
         response = make_response(redirect('/', code=302))
         response.set_cookie('langue', langue)
         return response
@@ -133,9 +138,7 @@ def afficher_services():
     """Page web qui affiche tous les services"""
     services = []
     services_existants = False
-    langue = request.cookies.get("langue")
-    if not langue:
-        langue = "fr_CA"
+    langue = get_locale()
 
     try:
         with bd.creer_connexion() as conn:
@@ -161,13 +164,11 @@ def afficher_services():
 @app.route('/modifier', methods=['GET', 'POST'])
 def modifier_service():
     """Interface pour modifier un service"""
-    if request.method == "GET": 
+    if request.method == "GET":
         identifiant = request.args.get('id', type=int)
         if not identifiant:
             abort(400)
-        langue = request.cookies.get("langue")
-        if not langue:
-            langue = "fr_CA"
+        langue = get_locale()
         try:
             with bd.creer_connexion() as conn:
                 with conn.get_curseur() as curseur:
@@ -188,7 +189,6 @@ def modification_service():
     classe_titre = ""
     classe_description = ""
     classe_localisation = ""
-    classe_cout = ""
     classe_photo = ""
 
     erreur = False
@@ -196,23 +196,21 @@ def modification_service():
     regex_titre_localisation = re.compile("^[a-zA-ZÀ-ÖØ-öø-ÿ\\s'-]{1,50}$")
     regex_description = re.compile("^.{5,2000}$")
     regex_html = re.compile("<(.*)>.*?|<(.*) />")
-    
+
     if request.method == "POST":
-        langue = request.cookies.get("langue")
-        if not langue:
-            langue = "fr_CA"
+        langue = get_locale()
         identifiant = request.form.get('id', type=int)
         titre = request.form.get('titre', default='')
         if not regex_titre_localisation.match(titre) or regex_html.search(titre):
             erreur = True
             classe_titre="is-invalid"
 
-        localisation = request.form.get('localisation', default='')
+        localisation = request.form.get('localisation', default='').strip()
         if not regex_titre_localisation.match(localisation) or regex_html.search(localisation):
             erreur = True
             classe_localisation = "is-invalid"
 
-        description = request.form.get('description', default='')
+        description = request.form.get('description', default='').strip()
         if not regex_description.match(description) or regex_html.search(description):
             erreur = True
             classe_description =  "is-invalid"
@@ -220,7 +218,7 @@ def modification_service():
         cout = request.form.get('cout', type=float, default=0)
         statut = request.form.get('statut', type=int)
 
-        photo = request.form.get('photo', default='')
+        photo = request.form.get('photo', default='').strip()
         if regex_html.search(photo):
             erreur = True
             classe_photo = "is-invalid"
@@ -228,9 +226,9 @@ def modification_service():
         if erreur:
             return render_template("modification_service_erreur.jinja", page="Erreur de modification d'un service", langue=langue, id_service=identifiant, statut=statut, classe_titre=classe_titre, titre=titre,
                     classe_localisation=classe_localisation, localisation=localisation, classe_description=classe_description,
-                    description=description, classe_cout=classe_cout, cout=cout, classe_photo=classe_photo, photo=photo)
+                    description=description, cout=cout, classe_photo=classe_photo, photo=photo)
 
-        try:    
+        try:
             with bd.creer_connexion() as conn:
                 with conn.get_curseur() as curseur:
                     curseur.execute('update services set '
@@ -260,11 +258,9 @@ def details_service():
         id_service = request.args.get("id", type=int)
         if not id_service:
             abort(400)
-        langue = request.cookies.get("langue")
-        if not langue:
-            langue = "fr_CA"
+        langue = get_locale()
 
-        try:  
+        try:
             with bd.creer_connexion() as conn:
                 with conn.get_curseur() as curseur:
                     curseur.execute('SELECT * from services where id_service=%(id_service)s',
@@ -280,7 +276,10 @@ def details_service():
                     })
                     details_du_service["nom_categorie"] = curseur.fetchone()["nom_categorie"]
                     erreur_service = False
-
+                    details_du_service["date_creation"] = dates.format_date(
+                        details_du_service["date_creation"], format="long", locale=langue)
+                    details_du_service["cout"] = numbers.format_currency(
+                        details_du_service["cout"], currency=devise[langue], locale=langue)
 
             return render_template(
                 'details-service.jinja', page="Détails du service", langue=langue, details_service=details_du_service,
@@ -288,7 +287,6 @@ def details_service():
         except Exception as e:
             logger.exception("Une erreur est survenue lors de l'affichage des détails du service: %s", e)
             abort(500)
-      
 
 
 @app.route('/')
@@ -296,9 +294,7 @@ def index():
     """Affiche les services"""
     services = []
     services_actifs = False
-    langue = request.cookies.get("langue")
-    if not langue:
-        langue = "fr_CA"
+    langue = get_locale()
 
     try:
         with bd.creer_connexion() as conn:
@@ -315,25 +311,20 @@ def index():
                     service["nom_categorie"] = curseur.fetchone()["nom_categorie"]
 
                 return render_template(
-                    'accueil.jinja', page="Accueil", langue=langue, services=services, services_actifs=services_actifs)
+                    'accueil.jinja', page="Accueil", langue=langue, services=services,
+                    services_actifs=services_actifs)
     except Exception as e:
         logger.exception("Une erreur est survenue lors de l'affichage des services actifs: %s", e)
         abort(500)
-
-
-    
 
 
 @app.errorhandler(500)
 def erreur_serveur_interne(e):
     """Pour les erreurs du côté serveur"""
     logger.exception(e)
-    langue = request.cookies.get("langue")
-    if not langue:
-        langue = "fr_CA"
+    langue = get_locale()
 
     message = "Une erreur du côté serveur est survenue. Veuillez retourner à la page d'accueil."
-    
     if e.original_exception and isinstance(e.original_exception, mysql.connector.errors.Error):
         message = "Une erreur est survenue en lien avec la base de données."
 
@@ -343,9 +334,7 @@ def erreur_serveur_interne(e):
 def page_non_trouvee(e):
     """Pour les routes invalides"""
     logger.exception(e)
-    langue = request.cookies.get("langue")
-    if not langue:
-        langue = "fr_CA"
+    langue = get_locale()
 
     message = "Cette page n'existe pas"
 
@@ -355,12 +344,11 @@ def page_non_trouvee(e):
 def parametre_invalide(e):
     """Pour un paramètre manquant dans l'url"""
     logger.exception(e)
-    langue = request.cookies.get("langue")
-    if not langue:
-        langue = "fr_CA"
+    langue = get_locale()
 
     message = "Un ou des paramètres invalides ont été spécifiées."
 
-    return render_template("erreur.jinja", page="Erreur de paramètre", langue=langue, message=message)
-     
+    return render_template("erreur.jinja", page="Erreur de paramètre",
+                           langue=langue, message=message)
+
 app.run()

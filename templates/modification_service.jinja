@@ -1,50 +1,55 @@
 {% extends "base.jinja" %}
 
 {% block contenu %}
-    <form method="post" action="/modification" class="p-2 w-50 mx-auto">
-    <legend>Modifier le service</legend>
-    <label for="id"></label>
-    <input type="hidden" name="id" value="{{service.id_service}}">
+<h2>Modifier le service</h2>
+<form method="post" action="/modification" class="p-2 w-50 mx-auto" novalidate>
+   <input type="hidden" name="id" value="{{service.id_service}}">
 
-    <fieldset>
+   <fieldset>
       <label for="titre">Titre:</label>
-      <input type="text" name="titre" id="titre" value="{{service.titre}}" class="{{classe_titre}}"/>
-      <div class="invalid-feedback">Le titre doit contenir entre 1 et 50 caractères, et il ne peut pas y avoir de balises html.</div>
-    </fieldset>
+      <input type="text" name="titre" id="titre" value="{{service.titre}}" class="{{classe_titre}}" />
+      <div class="invalid-feedback">Le titre doit contenir entre 1 et 50 caractères, et il ne peut pas y avoir de
+         balises html.</div>
+   </fieldset>
 
-     <fieldset>
-        <label for="localisation">Localisation:</label>
-        <input type="text" name="localisation" id="localisation" value="{{service.localisation}}" class="{{classe_localisation}}"/>
-        <div class="invalid-feedback">La localisation doit contenir entre 1 et 50 caractères, et il ne peut pas y avoir de balises html.</div>
-     </fieldset>
+   <fieldset>
+      <label for="localisation">Localisation:</label>
+      <input type="text" name="localisation" id="localisation" value="{{service.localisation}}"
+         class="{{classe_localisation}}" />
+      <div class="invalid-feedback">La localisation doit contenir entre 1 et 50 caractères, et il ne peut pas y avoir de
+         balises html.</div>
+   </fieldset>
 
-     <fieldset>
-        <label for="description">Description:</label>
-        <input type="text" name="description" id="description" value="{{service.description}}" class="{{classe_description}}" />
-        <div class="invalid-feedback">La description doit contenir entre 5 et 2000 caractères, et il ne doit pas y avoir de balises html.</div>
-     </fieldset>
+   <fieldset>
+      <label for="description">Description:</label>
+      <input type="text" name="description" id="description" value="{{service.description}}"
+         class="{{classe_description}}" />
+      <div class="invalid-feedback">La description doit contenir entre 5 et 2000 caractères, et il ne doit pas y avoir
+         de balises html.</div>
+   </fieldset>
 
-     <fieldset>
+   <fieldset>
       <label for="cout">Coût (en $):</label>
-      <input type="number" name="cout" id="cout" value="{{service.cout}}" class="{{classe_cout}}" />
+      <input type="number" name="cout" id="cout" value="{{service.cout}}" />
       <div class="invalid-feedback">Le coût doit être une valeur monétaire.</div>
-     </fieldset>
+   </fieldset>
 
-     <fieldset>
-        <label for="statut">Statut:</label>
-        <div class="d-flex justify-content-center" id="case-statut">
-          <input type="checkbox" id="statut" name="statut" value="1" {%if service.actif == 1 %} checked {% endif %}>
-          <label for="statut">Actif</label>
-        </div>
-     </fieldset>
+   <fieldset>
+      <label for="statut">Statut:</label>
+      <div id="case-statut">
+         <input class="col-3" type="checkbox" id="statut" name="statut" value="1" {%if service.actif==1 %} checked {%
+            endif %}>
+         <label for="statut">Actif</label>
+      </div>
+   </fieldset>
 
-     <fieldset>
-        <label for="photo">Photo:</label>
-        <input type="text" name="photo" id="photo" value="{{service.photo}}" class="{{classe_photo}}">
-        <div class="invalid-feedback">Ce champ ne peut contenir des balises html.</div>
-     </fieldset>
+   <fieldset>
+      <label for="photo">Photo:</label>
+      <input type="text" name="photo" id="photo" value="{{service.photo}}" class="{{classe_photo}}">
+      <div class="invalid-feedback">Ce champ ne peut contenir des balises html.</div>
+   </fieldset>
 
-     <button type="submit" class="btn btn-secondary">Modifier</button>
-    </form>
+   <button type="submit" class="btn btn-secondary">Modifier</button>
+</form>
 
 {% endblock %}
