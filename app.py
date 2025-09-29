@@ -106,7 +106,7 @@ def ajouter_service_dans_bd():
                         }
                     )
                     id_service_courant = curseur.lastrowid
-                    return redirect(f'/service?id={id_service_courant}', code=302)
+                    return redirect(f'/service?id={id_service_courant}', code=303)
         except Exception as e:
             logger.exception("Une erreur est survenue lors de l'ajout du service: %s", e)
             abort(500)
@@ -129,7 +129,7 @@ def modification_cookies():
     """Page pour la modification des cookies"""
     if request.method == "POST":
         langue = request.form.get("langue", default="fr_CA")
-        response = make_response(redirect('/', code=302))
+        response = make_response(redirect('/', code=303))
         response.set_cookie('langue', langue)
         return response
 
@@ -244,7 +244,7 @@ def modification_service():
                             'cout': cout,
                             'photo': photo
                         })
-            return redirect(f'/service?id={identifiant}', code=302)
+            return redirect(f'/service?id={identifiant}', code=303)
         except Exception as e:
             logger.exception("Une erreur est survenue lors de la modification du service: %s", e)
             abort(500)
